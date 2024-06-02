@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Exchange {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  api_key     String
+  api_secret  String
+  withdrawals Withdrawal[]
+}
+
+
+
+model Withdrawal {
+  id                 Int               @id @default(autoincrement())
+  amount             Decimal
+  user_id             Int
+  to_wallet_address String            @db.VarChar(42)
+  bank_suspend_id Int
+  currency           String
+  status             WithdrawalStatus @default(PENDING)
+  exchange           Exchange          @relation(fields: [exchange_id], references: [id])
+  exchange_id         Int               
+  network            String
+
+}
+
+enum WithdrawalStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELED
+}

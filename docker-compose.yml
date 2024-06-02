@@ -1,0 +1,104 @@
+version: '3.8'
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres:16.3
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - '5432:5432'
+    networks:
+      - backend
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@tetherland.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+
+    ports:
+      - '${PGADMIN_PORT:-5050}:80'
+    networks:
+      - backend
+    restart: unless-stopped
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    networks:
+      - backend
+    ports:
+      - 127.0.0.1:5672:5672
+      - 127.0.0.1:15672:15672
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - 127.0.0.1:3000:80
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+  generate:
+    image: node:20.13.1-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    entrypoint:
+      [
+        'sh',
+        '-c',
+        'npm install && npx prisma generate --schema=prisma/schema.prisma',
+      ]
+
+  pull:
+    image: node:20.13.1-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    entrypoint:
+      [
+        'sh',
+        '-c',
+        'npm install && npx prisma db pull --schema=prisma/schema.prisma',
+      ]
+
+  push:
+    image: node:20.13.1-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    entrypoint:
+      [
+        'sh',
+        '-c',
+        'npm install && npx prisma db push --schema=prisma/schema.prisma',
+      ]
+
+networks:
+  backend:
+    name: backend
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
