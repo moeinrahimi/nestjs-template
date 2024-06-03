@@ -24,7 +24,9 @@ async function bootstrap() {
     dsn: configService.get('SENTRY_DNS'),
   });
   app.useGlobalPipes(new ValidationPipe());
+
   app.setGlobalPrefix('/api');
+
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   await app.listen(configService.get('PORT') || 3000);

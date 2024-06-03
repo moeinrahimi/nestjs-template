@@ -9,6 +9,7 @@ start
 # development
 
 npm i
+create .env from .env.example and edit if needed
 docker compose up postgres
 docker compose up rabbitmq
 npm run db:push
