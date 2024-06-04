@@ -11,6 +11,7 @@ export class WithdrawalController {
   }
   @Post()
   withdrawalRequest(@Body() withdrawalRequestDto: WithdrawalRequestDto) {
+    // throw new TetherlandException('withdrawalNotFound');
     return this.withdrawalService.request(withdrawalRequestDto);
   }
   @Get('/:id/cancel')
