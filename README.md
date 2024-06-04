@@ -11,7 +11,7 @@ This template provides a starting point for building services using NestJS, Fast
 
 ## Conventions
 
-- **Naming Convention**: camelCase
+- **Naming Convention**: camelCase for files,variables and PascalCase for class names
 - **Module Convention**: naming module directory must be singular
 - **Types over Interfaces**: Prefer using Types wherever possible. Use Interfaces only when necessary liken when using generics.
 - **File Naming**: File names should be descriptive of their content. For example:
@@ -175,5 +175,3 @@ This template provides a starting point for building services using NestJS, Fast
      // Add more tests for different service methods
    });
    ```
-
-This structure and these examples should help your colleagues get started with building services using this template. Encourage them to follow the conventions and examples to maintain consistency and quality ac
