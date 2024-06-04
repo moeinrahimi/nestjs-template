@@ -13,7 +13,9 @@ This template provides a starting point for building services using NestJS, Fast
 
 - **Naming Convention**: camelCase for files,variables and PascalCase for class names
 - **Module Convention**: naming module directory must be singular
-- **Types over Interfaces**: Prefer using Types wherever possible. Use Interfaces only when necessary liken when using generics.
+- **Types over Interfaces**: Prefer using Types wherever possible. Use Interfaces only when necessary liken when using 
+- **Husky is Enabled**: before commits add to git husky runs linter and prettifier to make sure all standards are achieved
+generics.
 - **File Naming**: File names should be descriptive of their content. For example:
   - `user.type.ts`: Contains types related to the user.
 
