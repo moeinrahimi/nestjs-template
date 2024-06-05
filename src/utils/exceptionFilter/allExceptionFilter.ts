@@ -52,8 +52,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     ) {
       console.log('general ts exception');
       responseBody.error = {
-        type: exception.message,
-        message: null,
+        type: 'Internal Server Error',
+        message: exception.message,
       };
     }
     if (exception instanceof HttpException) {
