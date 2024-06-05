@@ -11,9 +11,9 @@ This template provides a starting point for building services using NestJS, Fast
 
 ## Conventions
 
-- **Naming Convention**: camelCase for files,variables and PascalCase for class names
-- **Module Convention**: naming module directory must be singular
-- **Types over Interfaces**: Prefer using Types wherever possible. Use Interfaces only when necessary liken when using 
+- **Naming Convention**: camelCase for files,variables and functions. and PascalCase for class names
+- **Module Convention**: naming module directory and file names must be singular
+- **Types over Interfaces**: Prefer using Types wherever possible. Use Interfaces only when necessary liken when using generics
 - **Husky is Enabled**: before commits add to git husky runs linter and prettifier to make sure all standards are achieved
 generics.
 - **File Naming**: File names should be descriptive of their content. For example:
@@ -55,17 +55,8 @@ generics.
 
 ### Creating a User Module
 
-1. **Define User Types and DTOs**: Create a folder named `user` with subfolders for `types` and `dto`. Define the types and DTOs in these folders.
+1. **Define User Types and DTOs**: Create a folder named `user` with subfolders for `types` and `dto`. Define the DTOs in these folders.
 
-   ```typescript
-   // user/types/user.type.ts
-   export type User = {
-     id: string;
-     name: string;
-     email: string;
-     password: string;
-   };
-   ```
 
    ```typescript
    // user/dto/create-user.dto.ts
@@ -84,58 +75,58 @@ generics.
    }
    ```
 
-2. **Create User Repository: Implement the repository logic in `user.repository.ts`.
+2. **Create User Repository**: Implement the repository logic in `user.repository.ts`.
 
    ```typescript
    // user/user.repository.ts
-  import { Injectable } from '@nestjs/common';
-  import { PrismaService } from '../prisma/prisma.service';
-  import { CreateUserDto } from './dto/create-user.dto';
-  import { User } from './types/user.type';
+    import { Injectable } from '@nestjs/common';
+    import { PrismaService } from '../prisma/prisma.service';
+    import { CreateUserDto } from './dto/create-user.dto';
+    import { User } from './types/user.type';
 
-  @Injectable()
-  export class UserRepository {
-    constructor(private readonly prisma: PrismaService) {}
+    @Injectable()
+    export class UserRepository {
+      constructor(private readonly prisma: PrismaService) {}
 
-    async createUser(data: CreateUserDto): Promise<User> {
-      return this.prisma.user.create({ data });
+      async createUser(data: CreateUserDto): Promise<User> {
+        return this.prisma.user.create({ data });
+      }
+
+      async getUserById(id: string): Promise<User> {
+        return this.prisma.user.findUnique({ where: { id } });
+      }
+
+      async getAllUsers(): Promise<User[]> {
+        return this.prisma.user.findMany();
+      }
     }
-
-    async getUserById(id: string): Promise<User> {
-      return this.prisma.user.findUnique({ where: { id } });
-    }
-
-    async getAllUsers(): Promise<User[]> {
-      return this.prisma.user.findMany();
-    }
-  }
    ```
 
-3. **Implement User Service: Create the service in `user.service.ts`.
+3. ****Implement User Service**: Create the service in `user.service.ts`.
 
    ```typescript
    // user/user.service.ts
-  import { Injectable } from '@nestjs/common';
-  import { UserRepository } from './user.repository';
-  import { CreateUserDto } from './dto/create-user.dto';
-  import { User } from './types/user.type';
+    import { Injectable } from '@nestjs/common';
+    import { UserRepository } from './user.repository';
+    import { CreateUserDto } from './dto/create-user.dto';
+    import { User } from './types/user.type';
 
-  @Injectable()
-  export class UserService {
-    constructor(private readonly userRepository: UserRepository) {}
+    @Injectable()
+    export class UserService {
+      constructor(private readonly userRepository: UserRepository) {}
 
-    async createUser(data: CreateUserDto): Promise<User> {
-      return this.userRepository.createUser(data);
+      async createUser(data: CreateUserDto): Promise<User> {
+        return this.userRepository.createUser(data);
+      }
+
+      async getUserById(id: string): Promise<User> {
+        return this.userRepository.getUserById(id);
+      }
+
+      async getAllUsers(): Promise<User[]> {
+        return this.userRepository.getAllUsers();
+      }
     }
-
-    async getUserById(id: string): Promise<User> {
-      return this.userRepository.getUserById(id);
-    }
-
-    async getAllUsers(): Promise<User[]> {
-      return this.userRepository.getAllUsers();
-    }
-  }
    ```
 4. **Implement User Controller**: Create the controller in `user.controller.ts` and add Swagger annotations.
 
