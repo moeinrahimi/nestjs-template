@@ -1,4 +1,4 @@
-# withdrawal-service
+# nestjs-template
 
 This template provides a starting point for building services using NestJS, Fastify, and PostgreSQL. It incorporates Prisma ORM for database interactions and enforces specific naming conventions and best practices to ensure consistency across projects.
 
