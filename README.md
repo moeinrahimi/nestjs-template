@@ -84,34 +84,60 @@ generics.
    }
    ```
 
-2. **Create User Service**: Implement the service logic in `user.service.ts`.
+2. **Create User Repository: Implement the repository logic in `user.repository.ts`.
+
+   ```typescript
+   // user/user.repository.ts
+  import { Injectable } from '@nestjs/common';
+  import { PrismaService } from '../prisma/prisma.service';
+  import { CreateUserDto } from './dto/create-user.dto';
+  import { User } from './types/user.type';
+
+  @Injectable()
+  export class UserRepository {
+    constructor(private readonly prisma: PrismaService) {}
+
+    async createUser(data: CreateUserDto): Promise<User> {
+      return this.prisma.user.create({ data });
+    }
+
+    async getUserById(id: string): Promise<User> {
+      return this.prisma.user.findUnique({ where: { id } });
+    }
+
+    async getAllUsers(): Promise<User[]> {
+      return this.prisma.user.findMany();
+    }
+  }
+   ```
+
+3. **Implement User Service: Create the service in `user.service.ts`.
 
    ```typescript
    // user/user.service.ts
-   import { Injectable } from '@nestjs/common';
-   import { PrismaService } from '../prisma/prisma.service';
-   import { CreateUserDto } from './dto/create-user.dto';
-   import { User } from './types/user.type';
+  import { Injectable } from '@nestjs/common';
+  import { UserRepository } from './user.repository';
+  import { CreateUserDto } from './dto/create-user.dto';
+  import { User } from './types/user.type';
 
-   @Injectable()
-   export class UserService {
-     constructor(private readonly prisma: PrismaService) {}
+  @Injectable()
+  export class UserService {
+    constructor(private readonly userRepository: UserRepository) {}
 
-     async createUser(data: CreateUserDto): Promise<User> {
-       return this.prisma.user.create({ data });
-     }
+    async createUser(data: CreateUserDto): Promise<User> {
+      return this.userRepository.createUser(data);
+    }
 
-     async getUserById(id: string): Promise<User> {
-       return this.prisma.user.findUnique({ where: { id } });
-     }
+    async getUserById(id: string): Promise<User> {
+      return this.userRepository.getUserById(id);
+    }
 
-     async getAllUsers(): Promise<User[]> {
-       return this.prisma.user.findMany();
-     }
-   }
+    async getAllUsers(): Promise<User[]> {
+      return this.userRepository.getAllUsers();
+    }
+  }
    ```
-
-3. **Implement User Controller**: Create the controller in `user.controller.ts` and add Swagger annotations.
+4. **Implement User Controller**: Create the controller in `user.controller.ts` and add Swagger annotations.
 
    ```typescript
    // user/user.controller.ts
@@ -149,7 +175,7 @@ generics.
    }
    ```
 
-4. **Unit Tests**: Write unit tests for the user module in `user.service.spec.ts`.
+5. **Unit Tests**: Write unit tests for the user module in `user.service.spec.ts`.
 
    ```typescript
    // user/user.service.spec.ts
