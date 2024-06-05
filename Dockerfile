@@ -8,7 +8,11 @@ COPY . .
 RUN npm run build
 
 FROM node:20.13.1-alpine AS production
-ENV NODE_ENV=production
+ARG NODE_ENV
+ARG PORT
+ENV TZ=Asia/Tehran
+ENV NODE_ENV=${NODE_ENV}
+ENV PORT=${PORT}
 WORKDIR /app
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/package.json ./package.json
