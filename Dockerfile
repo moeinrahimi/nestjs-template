@@ -1,5 +1,5 @@
 FROM node:20.13.1-alpine AS builder
-SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 
 WORKDIR /app
 COPY package*.json ./
