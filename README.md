@@ -44,6 +44,8 @@ generics.
    docker compose up postgres
    docker compose up rabbitmq
    docker compose up push
+   #or use below if developing on local without docker
+   npx prisma db push --schema=prisma/schema.prisma
    ```
 
 4. Run the development server:
