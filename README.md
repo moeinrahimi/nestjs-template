@@ -11,7 +11,7 @@ This template provides a starting point for building services using NestJS, Fast
 
 ## Conventions
 
-- **Naming Convention**: camelCase for files,variables and functions. and PascalCase for class names
+- **Naming Convention**: camelCase for files,variables and functions. and PascalCase for class names. databased and schema must be snake_case
 - **Module Convention**: naming module directory and file names must be singular
 - **Types over Interfaces**: Prefer using Types wherever possible. Use Interfaces only when necessary liken when using generics
 - **Husky is Enabled**: before commits add to git husky runs linter and prettifier to make sure all standards are achieved
